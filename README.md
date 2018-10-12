@@ -20,3 +20,4 @@ A Django app Twitch chat bot that allows user to visualize trending keywords in 
 
 ## Sources Used
 - Twitch bot docs
+- Brian Nations
