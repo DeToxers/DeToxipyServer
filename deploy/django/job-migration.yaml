@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: detoxipy-server-migrations
+spec:
+    template:
+        spec:
+            containers:
+                - name: detoxipy-server
+                  image: detoxipy-server
+                  command: ['python', 'manage.py', 'migrate']
+                  env:
+                    - name: POSTGRES_USER
+                      valueFrom:
+                        secretKeyRef:
+                            name: postgres-credentials
+                            key: user
+                    - name: POSTGRES_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            name: postgres-credentials
+                            key: password
+                    - name: POSTGREST_HOST
+                      value: postgres-service
+            restartPolicy: Never
+    backoffLimit: 5
