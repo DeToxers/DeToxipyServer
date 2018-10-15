@@ -32,3 +32,5 @@ spec:
                             key: password
                     - name: POSTGRES_HOST
                       value: postgres-service
+                    - name: REDIS_HOST
+                      value: redis-service
