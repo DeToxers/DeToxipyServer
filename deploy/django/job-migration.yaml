@@ -7,7 +7,7 @@ spec:
         spec:
             containers:
                 - name: detoxipy-server
-                  image: detoxipy-server
+                  image: detoxipy:0.0.1
                   command: ['python', 'manage.py', 'migrate']
                   env:
                     - name: POSTGRES_USER

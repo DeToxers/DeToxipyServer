@@ -21,6 +21,7 @@ pylint = "*"
 "pep8" = "*"
 pytest = "*"
 "autopep8" = "*"
+factory-boy = "*"
 
 [requires]
 python_version = "3.6"

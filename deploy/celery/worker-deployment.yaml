@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: celery-worker
-          image: detoxipy-server
+          image: detoxipy:0.0.1
           command: ['celery', '-A', 'kubernetes_django', 'worker', '-l', 'info']
           env:
             - name: POSTGRES_USER

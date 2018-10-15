@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: celery-beat
-          image: detoxipy-server
+          image: detoxipy:0.0.1
           command: ['celery', '-A', 'kubernetes_django', 'beat', '-l', 'debug']
           env:
             - name: POSTGRES_USER
