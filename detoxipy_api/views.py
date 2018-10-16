@@ -21,6 +21,6 @@ class MessageDetailApiView(generics.RetrieveAPIView):
     def get_queryset(self):
         """ Filters messages based on room in question
         """
-        return Message.objects.filter(
+        return RecentMessage.objects.filter(
             room__room_id=self.request.room.room_id
         )
