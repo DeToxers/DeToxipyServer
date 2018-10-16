@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from detoxipy_api.models import Message
+from detoxipy_api.models import RecentMessage
 
 
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
@@ -9,7 +9,7 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     class Meta:
-        model = Message
+        model = RecentMessage
         fields = (
             'room',
             'content',
