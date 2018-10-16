@@ -1,7 +1,7 @@
 # from rest_framework.authentication import TokenAuthentication
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
-from .serializers import Message
+from .serializers import RecentMessage
 
 
 class MessageListApiView(generics.ListCreateAPIView):
