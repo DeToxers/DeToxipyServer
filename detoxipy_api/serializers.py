@@ -1,39 +1,45 @@
 from rest_framework import serializers
 # from detoxipy_api.models import RecentMessage
+from .models import Session
 
 
-class MessageSerializer(serializers.HyperlinkedModelSerializer):
-    message = serializers.HyperlinkedRelatedField(
-        view_name='detoxipy_api',
-        read_only=True
+class MessageSerializer(serializers.ModelSerializer):
+    message = serializers.RelatedField(
+        # view_name='detoxipy_api',
+        # read_only=True
     )
 
     class Meta:
-        model = RecentMessage
-        fields = (
-            'room',
-            'content',
-        )
+        model = Session
+        fields = ('id', 'message', 'total', 'weight', 'time_updated')
+
+        def create(self, validated_data):
+            message = super().create({
+                'message': validated_data['message'],
+                'total': validated_data['total'],
+                'weight': validated_data['weight'],
+                'time_updated': validated_data['time_updated'],
+            })
+
+            message.save()
+            return message
 
 
-class CommentSerializer(serializers.Serializer):
+class ChatBotSerializer(serializers.ModelSerializer):
+    """ Takes in the raw ChatBot text, returns the wanted data
     """
-    """
-    # room_id = models.IntegerField(max_length=180, default='Untitled')
-    message = serializers.CharField(max_length=48)
-    total = serializers.IntegerField()
-    weight = serializers.FloatField()
-    time_updated = serializers.DateTimeField()
+
+    class Meta:
+        model = Session
+        fields = ('id', 'message', 'total', 'weight', 'time_updated')
 
 
-def clean_chat(chat):
-    """ Takes in a single line from the chat,
-        returns it cleaned of un-related text
-    """
-    ignore_words = ['ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than']
 
-    text = [word for word in chat.lower().split() if word not in ignore_words]
-    str_count = Counter(text)
-    json_db = json.dumps(str_count)
-    return json_db
-
+# class CommentSerializer(serializers.Serializer):
+#     """
+#     """
+#     # room_id = models.IntegerField(max_length=180, default='Untitled')
+#     message = serializers.CharField(max_length=48)
+#     total = serializers.IntegerField()
+#     weight = serializers.FloatField()
+#     time_updated = serializers.DateTimeField()
