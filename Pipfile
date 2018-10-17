@@ -14,6 +14,8 @@ flower = "==0.9.2"
 kombu = ">=4.2.0"
 "psycopg2" = "==2.7.5"
 redis = "==2.10.6"
+django-rq = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 pylint = "*"

@@ -2,11 +2,12 @@
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 
-from .models import Session, RecentMessage
+from .models import Session
 from datetime import datetime
 from .serializers import MessageSerializer, ChatBotSerializer
 from django.http import Http404
 
+from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 from rest_framework.request import clone_request
 from rest_framework import status
@@ -36,14 +37,14 @@ class GetBubbleApiView(generics.ListAPIView):
 
         return json_to_return
 
-    def get_context_data(self, **kwargs):
-        """ Filter messages by room id
-        """
-        return RecentMessage.objects.filter(
-            room__room_id=self.request.room.room_id
-        )
-        context = super().get_context_data(**kwargs)
-        return context
+    # def get_context_data(self, **kwargs):
+    #     """ Filter messages by room id
+    #     """
+    #     return RecentMessage.objects.filter(
+    #         room__room_id=self.request.room.room_id
+    #     )
+    #     context = super().get_context_data(**kwargs)
+    #     return context
 
     def format_query(self, query):
         """ Creates a new formatted object for each max row so that D3 can read it and render a bubble chart
@@ -63,6 +64,7 @@ class GetBubbleApiView(generics.ListAPIView):
         return bubble_data
 
 
+@cache_page(60 * 7200)
 class MessagePostApiView(generics.CreateAPIView):
     """ This is what handles when the ChatBot sends up text
     """
@@ -70,53 +72,63 @@ class MessagePostApiView(generics.CreateAPIView):
     context_object_name = 'chat'
     serializer_class = ChatBotSerializer
 
-    # def post(self, request):
-    #     """ Takes in live chat data and posts it into the db
+    def get(self):
+        """
+        """
+        import pdb; pdb.set_trace()
+        queryset = self.model.objects.first()
 
-    #     Input: request is a Django Request object
+        return Response(queryset)
 
-    #     Output: response, a Django Response object. In addition the cleaned
-    #     words will be added to our database.
 
+
+    # # def post(self, request):
+    # #     """ Takes in live chat data and posts it into the db
+
+    # #     Input: request is a Django Request object
+
+    # #     Output: response, a Django Response object. In addition the cleaned
+    # #     words will be added to our database.
+
+    # #     """
+    # #     if request.method != 'POST':
+    # #         return generics.response(status=404)
+    # #     cleaned_words = self.sanitize(request.data.content)
+
+    # def update(self, request, **kwargs):
     #     """
-    #     if request.method != 'POST':
-    #         return generics.response(status=404)
-    #     cleaned_words = self.sanitize(request.data.content)
+    #     """
+    #     instance = self.get_object_or_none()
+    #     serializer = self.serializer_class
 
-    def update(self, request, *args, **kwargs):
-        """
-        """
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object_or_none()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
+    #     if instance is None:
+    #         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+    #         lookup_value = self.kwargs[lookup_url_kwarg]
+    #         extra_kwargs = {self.lookup_field: lookup_value}
+    #         serializer.save(**extra_kwargs)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if instance is None:
-            lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-            lookup_value = self.kwargs[lookup_url_kwarg]
-            extra_kwargs = {self.lookup_field: lookup_value}
-            serializer.save(**extra_kwargs)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     serializer.save()
+    #     return Response(serializer.data)
 
-        serializer.save()
-        return Response(serializer.data)
+    # def get_object_or_none(self):
+    #     """
+    #     """
+    #     try:
+    #         return self.get_object()
+    #     except Http404:
+    #         if self.request.method == 'PUT':
+    #             # For PUT-as-create operation, we need to ensure that we have
+    #             # relevant permissions, as if this was a POST request.  This
+    #             # will either raise a PermissionDenied exception, or simply
+    #             # return None.
+    #             self.check_permissions(clone_request(self.request, 'POST'))
+    #         else:
+    #             # PATCH requests where the object does not exist should still
+    #             # return a 404 response.
+    #             raise
 
-    def get_object_or_none(self):
-        """
-        """
-        try:
-            return self.get_object()
-        except Http404:
-            if self.request.method == 'PUT':
-                # For PUT-as-create operation, we need to ensure that we have
-                # relevant permissions, as if this was a POST request.  This
-                # will either raise a PermissionDenied exception, or simply
-                # return None.
-                self.check_permissions(clone_request(self.request, 'POST'))
-            else:
-                # PATCH requests where the object does not exist should still
-                # return a 404 response.
-                raise
+    # def
 
     def sanitize(self, raw_chat):
         """ TODO: Formats the raw chat to put in the db, also filters out filler words
