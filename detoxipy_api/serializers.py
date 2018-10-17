@@ -4,21 +4,17 @@ from .models import Session
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    message = serializers.RelatedField(
-        # view_name='detoxipy_api',
-        # read_only=True
-    )
 
     class Meta:
         model = Session
-        fields = ('id', 'message', 'total', 'weight', 'time_updated')
+        fields = ('id', 'message', 'total')
 
         def create(self, validated_data):
             message = super().create({
                 'message': validated_data['message'],
                 'total': validated_data['total'],
-                'weight': validated_data['weight'],
-                'time_updated': validated_data['time_updated'],
+                # 'weight': validated_data['weight'],
+                # 'time_updated': validated_data['time_updated'],
             })
 
             message.save()
@@ -28,11 +24,9 @@ class MessageSerializer(serializers.ModelSerializer):
 class ChatBotSerializer(serializers.ModelSerializer):
     """ Takes in the raw ChatBot text, returns the wanted data
     """
-
     class Meta:
         model = Session
-        fields = ('id', 'message', 'total', 'weight', 'time_updated')
-
+        fields = ('id', 'message', 'total')
 
 
 # class CommentSerializer(serializers.Serializer):

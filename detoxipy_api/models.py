@@ -4,7 +4,7 @@ from django.db import models
 class Session(models.Model):
     """ All current sessions store their words here.
     """
-    room_id = models.IntegerField(max_length=180, default='Untitled')
+    room_id = models.IntegerField(max_length=180)
     message = models.CharField(max_length=48)
     total = models.IntegerField()
     weight = models.FloatField()
@@ -18,7 +18,7 @@ class Session(models.Model):
 
 
 class RecentMessage(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
+    room = models.IntegerField(max_length=180)
     content = models.CharField(max_length=512, default='Untitled')
     count = models.IntegerField()
     time_updated = models.DateField(auto_now_add=True)
@@ -30,9 +30,8 @@ class RecentMessage(models.Model):
         return f'{self.room} | {self.content}'
 
 
-class SesionMessage(models.Model):
-    room = models.ForeignKey(
-        Room, on_delete=models.CASCADE, related_name='messages')
+class SessionMessage(models.Model):
+    room = models.IntegerField(max_length=180)
     content = models.CharField(max_length=512, default='Untitled')
     count = models.IntegerField()
 
