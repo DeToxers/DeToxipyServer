@@ -141,16 +141,14 @@ REDIS_URL = "redis://{host}:{port}/1".format(
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        },
-        "KEY_PREFIX": "example"
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": 'session_cache',
     }
 }
 
+# RQ_QUEUES=
+
 # CELERY
-BROKER_URL = REDIS_URL
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+# BROKER_URL = REDIS_URL
+# CELERY_BROKER_URL = REDIS_URL
+# CELERY_RESULT_BACKEND = CELERY_BROKER_URL

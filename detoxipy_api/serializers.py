@@ -7,12 +7,13 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Session
-        fields = ('id', 'message', 'total')
+        fields = ('id', 'message', 'total', 'room_id')
 
         def create(self, validated_data):
             message = super().create({
                 'message': validated_data['message'],
                 'total': validated_data['total'],
+                'room_id': validated_data['room_id']
                 # 'weight': validated_data['weight'],
                 # 'time_updated': validated_data['time_updated'],
             })
