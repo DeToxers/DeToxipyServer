@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import datetime
 
 
 class Session(models.Model):
@@ -9,7 +8,6 @@ class Session(models.Model):
     message = models.CharField(max_length=48)
     total = models.IntegerField()
     weight = models.FloatField()
-    # time_started = models.DateField(auto_now_add=True)
     time_updated = models.DateField(auto_now=True)
 
     def __repr__(self):

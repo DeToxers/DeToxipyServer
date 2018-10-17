@@ -12,12 +12,12 @@ class MessageListApiView(generics.ListCreateAPIView):
     template_name = 'message_list.html'
     model = Session
     context_object_name = 'messages'
-    queryset = Session.objects.all()
+    # queryset = Session.objects.all()
 
     def get_queryset(self):
         """ Giving all chats that we care about
         """
-        target_time = datetime.today().timestamp() - 120
+        target_time = datetime.now() - datetime.timedelta(minutes=2)
         return Session.objects.filter(
             room_id=self.request.room_id,
             time_updated__gte=datetime(target_time),
@@ -27,19 +27,18 @@ class MessageListApiView(generics.ListCreateAPIView):
     def get_context_data(self, **kwargs):
         """
         """
-        target_time = datetime.now()
         context = super().get_context_data(**kwargs)
         # do some stuff
         return context
 
 
-class MessageDetailApiView(generics.RetrieveAPIView):
-    """ Class for accessing the detail for a single message
-    """
+# class MessageDetailApiView(generics.RetrieveAPIView):
+#     """ Class for accessing the detail for a single message
+#     """
 
-    def get_queryset(self):
-        """ Filters messages based on room in question
-        """
-        return Message.objects.filter(
-            room__room_id=self.request.room.room_id
-        )
+#     def get_queryset(self):
+#         """ Filters messages based on room in question
+#         """
+#         return Message.objects.filter(
+#             room__room_id=self.request.room.room_id
+#         )
