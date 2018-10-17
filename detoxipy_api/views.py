@@ -38,6 +38,9 @@ class MessageListApiView(generics.ListAPIView):
     def get_context_data(self, **kwargs):
         """
         """
+        return RecentMessage.objects.filter(
+            room__room_id=self.request.room.room_id
+        )
         context = super().get_context_data(**kwargs)
         # do some stuff
         return context
