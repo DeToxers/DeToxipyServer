@@ -1,5 +1,6 @@
 # from rest_framework.authentication import TokenAuthentication
 # from rest_framework.permissions import IsAuthenticated
+from collections import Counter
 from rest_framework import generics
 
 from .models import Session
@@ -7,7 +8,7 @@ from datetime import datetime
 from .serializers import MessageSerializer, ChatBotSerializer
 from django.http import Http404
 
-from django.views.decorators.cache import cache_page
+# from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 from rest_framework.request import clone_request
 from rest_framework import status
@@ -23,7 +24,7 @@ class GetBubbleApiView(generics.ListAPIView):
     # queryset = Session.objects.all()
     pk_url_kwarg = 'id'
 
-    def get_queryset(self):
+    def get_queryset(self, *args, **kwargs):
         """ Getting all chats that we care about
         """
         max_bubble = 5
@@ -33,9 +34,14 @@ class GetBubbleApiView(generics.ListAPIView):
         # top_records = Session.objects.order_by('-weight').filter(
         #     weight__in=top_stream_scores[:max_bubble])
 
-        json_to_return = self.format_query(top_stream_scores)
+        import pdb; pdb.set_trace()
+        return top_stream_scores
 
-        return json_to_return
+    def post(self, *args, **kwargs):
+        """
+        """
+        pass
+
 
     # def get_context_data(self, **kwargs):
     #     """ Filter messages by room id
@@ -64,19 +70,17 @@ class GetBubbleApiView(generics.ListAPIView):
         return bubble_data
 
 
-@cache_page(60 * 7200)
 class MessagePostApiView(generics.CreateAPIView):
     """ This is what handles when the ChatBot sends up text
     """
-    model = Session
-    context_object_name = 'chat'
+    # model = Session
     serializer_class = ChatBotSerializer
 
-    def get(self):
+    def get(self, *args, **kwargs):
         """
         """
-        import pdb; pdb.set_trace()
-        queryset = self.model.objects.first()
+        # import pdb; pdb.set_trace()
+        queryset = Session.objects.all()
 
         return Response(queryset)
 
@@ -130,17 +134,24 @@ class MessagePostApiView(generics.CreateAPIView):
 
     # def
 
-    def sanitize(self, raw_chat):
-        """ TODO: Formats the raw chat to put in the db, also filters out filler words
-            Input: raw chat which is a list
+    # def sanitize(self, raw_chat):
+    #     """ TODO: Formats the raw chat to put in the db, also filters out filler words
+    #         Input: raw chat which is a list
 
-            Output: clean chat which is a dict
-        """
-        cleaned_words = {}
-        for message in raw_chat:
-            for word in message:
-                if cleaned_words[word]:
-                    cleaned_words[word] += 1
-                else:
-                    cleaned_words[word] = 1
-        return cleaned_words
+    #         Output: clean chat which is a dict
+    #     """
+
+    #     ignore_words = ['ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than']
+
+    #     chat = ' '.join(raw_chat)
+    #     text = [word for word in chat.lower().split() if word not in ignore_words]
+    #     return Counter(text)
+
+        # cleaned_words = {}
+        # for message in raw_chat:
+        #     for word in message:
+        #         if cleaned_words[word]:
+        #             cleaned_words[word] += 1
+        #         else:
+        #             cleaned_words[word] = 1
+        # return cleaned_words

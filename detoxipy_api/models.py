@@ -17,16 +17,17 @@ class Session(models.Model):
         return f'{self.message} : {self.weight}'
 
 
-class SessionCache(models.Model):
-    
-    top_five = models.TextField()
-    room_id = models.IntegerField()
 
-    def __repr__(self):
-        return f'<Top Five: {self.top_five} | {self.room_id} >'
+# class SessionCache(models.Model):
 
-    def __str__(self):
-        return f'{self.top_five} : {self.room_id}'
+#     top_five = models.TextField()
+#     room_id = models.IntegerField()
+
+#     def __repr__(self):
+#         return f'<Top Five: {self.top_five} | {self.room_id} >'
+
+#     def __str__(self):
+#         return f'{self.top_five} : {self.room_id}'
 # class RecentMessage(models.Model):
 #     room = models.IntegerField()
 #     content = models.CharField(max_length=512, default='Untitled')
