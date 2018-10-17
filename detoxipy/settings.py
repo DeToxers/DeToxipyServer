@@ -38,15 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #health checks
-    'health_check',
+    # health checks
     'health_check.db',
+    'health_check',
     'health_check.cache',
     'health_check.contrib.celery',
 
-    #Projects
-
+    # Projects
+    'detoxipy',
     # Apps
+    'detoxipy_api',
 ]
 
 MIDDLEWARE = [
