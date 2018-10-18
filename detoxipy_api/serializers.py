@@ -1,36 +1,17 @@
 from rest_framework import serializers
-# from detoxipy_api.models import RecentMessage
-from .models import Session
+from .models import ChatText
 
 
-class MessageSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Session
-        fields = ('id', 'message', 'total', 'room_id')
-
-        def create(self, validated_data):
-            message = super().create({
-                'message': validated_data['message'],
-                'total': validated_data['total'],
-                'room_id': validated_data['room_id']
-                # 'weight': validated_data['weight'],
-                # 'time_updated': validated_data['time_updated'],
-            })
-
-            message.save()
-            return message
-
-
-class ChatBotSerializer(serializers.ModelSerializer):
+class ChatTextSerializer(serializers.ModelSerializer):
     """ Takes in the raw ChatBot text, returns the wanted data
     """
-    message = serializers.CharField()
-    total = serializers.IntegerField()
+    room_id = serializers.IntegerField()
+    content = serializers.TextField()
+    count = serializers.IntegerField()
 
     class Meta:
-        model = Session
-        fields = ('id', 'message', 'total')
+        model = ChatText
+        fields = ('room_id', 'content', 'count')
 
 
 # class CommentSerializer(serializers.Serializer):
