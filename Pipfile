@@ -16,6 +16,7 @@ kombu = ">=4.2.0"
 redis = "==2.10.6"
 sh = "*"
 boto = "*"
+"boto3" = "*"
 
 [dev-packages]
 pylint = "*"
