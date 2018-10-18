@@ -14,10 +14,11 @@ flower = "==0.9.2"
 kombu = ">=4.2.0"
 "psycopg2" = "==2.7.5"
 redis = "==2.10.6"
+sh = "*"
+boto = "*"
 
 [dev-packages]
 pylint = "*"
-"flake8" = "*"
 "pep8" = "*"
 pytest = "*"
 "autopep8" = "*"
