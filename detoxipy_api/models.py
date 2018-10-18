@@ -1,51 +1,12 @@
 from django.db import models
 
 
-class Session(models.Model):
-    """ All current sessions store their words here.
+class ChatText(models.Model):
     """
-    room_id = models.IntegerField(max_length=180, default='Untitled')
-    message = models.CharField(max_length=48)
-    total = models.IntegerField()
-    weight = models.FloatField()
-    time_updated = models.DateField(auto_now=True)
-
-    def __repr__(self):
-        return f'<Word: {self.message} | {self.total} | {self.weight} >'
-
-    def __str__(self):
-        return f'{self.message} : {self.weight}'
-
-
-class RecentMessage(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
-    content = models.CharField(max_length=512, default='Untitled')
-    count = models.IntegerField()
-    time_updated = models.DateField(auto_now_add=True)
-
-    def __repr__(self):
-        return f'<Room: {self.room} | <Content: {self.content}>'
-
-    def __str__(self):
-        return f'{self.room} | {self.content}'
-
-
-class SesionMessage(models.Model):
-    room = models.ForeignKey(
-        Room, on_delete=models.CASCADE, related_name='messages')
-    content = models.CharField(max_length=512, default='Untitled')
+    """
+    room_id = models.IntegerField()
+    content = models.TextField()
     count = models.IntegerField()
 
-class Main(models.Model):
-    """ This is our long term storage for data visualization for streamers
-    """
-    room_id = models.IntegerField(max_length=180, default='Untitled')
-    message = models.CharField(max_length=48)
-    total = models.IntegerField()
-    time_updated = models.DateField(auto_now=True)
-
-    def __repr__(self):
-        return f'<Main | {self.message} | {self.total}>'
-
     def __str__(self):
-        return f'{self.message} : {self.total}'
+        return f'{self.room_id} : {self.content} " {self.count}'
