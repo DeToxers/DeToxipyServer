@@ -25,6 +25,9 @@ class MessageSerializer(serializers.ModelSerializer):
 class ChatBotSerializer(serializers.ModelSerializer):
     """ Takes in the raw ChatBot text, returns the wanted data
     """
+    message = serializers.CharField()
+    total = serializers.IntegerField()
+
     class Meta:
         model = Session
         fields = ('id', 'message', 'total')
