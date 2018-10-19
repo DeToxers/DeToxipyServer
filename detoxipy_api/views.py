@@ -80,6 +80,9 @@ class MessageGetApiView(generics.CreateAPIView):
 
     def get(self, *args, **kwargs):
 
+
+        return_values = []
+
         def get_if_exists(model, **kwargs):
 
             obj = model.objects.filter(room_id=kwargs['kwargs']['pk'])
@@ -92,12 +95,12 @@ class MessageGetApiView(generics.CreateAPIView):
         if not queryset:
             raise KeyError
 
-        import pdb; pdb.set_trace()
-        row_obj = json.loads(queryset[0].json_chat)
-        for key, value in row_obj.items():
+        row_obj = json.loads(queryset[0].json_chat).items()
+        for key, value in row_obj:
             print(key)
             new_obj = {'name': key, 'size': value}
             return_values.append(new_obj)
+
 
         return Response(json.dumps(return_values))
 
