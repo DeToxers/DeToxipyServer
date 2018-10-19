@@ -16,6 +16,8 @@ kombu = ">=4.2.0"
 redis = "==2.10.6"
 django-rq = "*"
 "psycopg2-binary" = "*"
+django-rest-framework = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pylint = "*"

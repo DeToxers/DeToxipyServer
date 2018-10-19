@@ -4,10 +4,10 @@ from collections import Counter
 from rest_framework import generics
 import json
 
-from .models import Session, ChatText
+from .models import ChatText
 from datetime import datetime
 from .serializers import MessageSerializer, ChatBotSerializer
-from django.http import Http404
+from django.http import Http404, HttpResponse
 
 # from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
@@ -21,7 +21,7 @@ class GetBubbleApiView(generics.ListAPIView):
     """ Custom class for listing all of the messages
     """
     # template_name = 'message_list.html'
-    model = Session
+    # model = Session
     context_object_name = 'bubble'
     serializer_class = MessageSerializer
     # queryset = Session.objects.all()
@@ -31,13 +31,12 @@ class GetBubbleApiView(generics.ListAPIView):
         """ Getting all chats that we care about
         """
         max_bubble = 5
-        top_stream_scores = Session.objects.filter(
-            room_id=self.request.room_id).order_by(
-                'weight')[:max_bubble]
+        # top_stream_scores = Session.objects.filter(
+        #     room_id=self.request.room_id).order_by(
+        #         'weight')[:max_bubble]
         # top_records = Session.objects.order_by('-weight').filter(
         #     weight__in=top_stream_scores[:max_bubble])
 
-        import pdb; pdb.set_trace()
         return top_stream_scores
 
     def post(self, *args, **kwargs):
@@ -73,32 +72,95 @@ class GetBubbleApiView(generics.ListAPIView):
         return bubble_data
 
 
-class MessagePostApiView(generics.CreateAPIView):
+class MessageGetApiView(generics.CreateAPIView):
     """ This is what handles when the ChatBot sends up text
     """
-    # model = Session
+    model = ChatText
     serializer_class = ChatBotSerializer
 
     def get(self, *args, **kwargs):
-        """
-        """
-        import pdb; pdb.set_trace()
-        # return_values = [{i:j for (i,j) in g.__dict__.items() if i != '_state' and i != 'time_updated'} for g in Session.objects.all()]
 
-        return Response(return_values)
+        def get_if_exists(model, **kwargs):
+
+            obj = model.objects.filter(room_id=kwargs['kwargs']['pk'])
+            return obj
+
+            # row_obj = [{i:j for (i,j) in g.__dict__.items() if i != '_state' and i != 'time_updated'} for g in ChatText.objects.all()]
+            # return_values = []
+        queryset = get_if_exists(ChatText, kwargs=kwargs)
+
+        if not queryset:
+            raise KeyError
+
+        import pdb; pdb.set_trace()
+        row_obj = json.loads(queryset[0].json_chat)
+        for key, value in row_obj.items():
+            print(key)
+            new_obj = {'name': key, 'size': value}
+            return_values.append(new_obj)
+
+        return Response(json.dumps(return_values))
+
+
+
+class MessagePostApiView(generics.CreateAPIView):
+    """ This is what handles when the ChatBot sends up text
+    """
+    model = ChatText
+    serializer_class = ChatBotSerializer
+
+    # def get(self, *args, **kwargs):
+    #     """
+    #     """
+
+        # def get_if_exists(model, **kwargs):
+        #     obj = model.objects.filter(room_id=kwargs['pk'])
+        #     return obj
+        # # import pdb; pdb.set_trace()
+
+        # # row_obj = [{i:j for (i,j) in g.__dict__.items() if i != '_state' and i != 'time_updated'} for g in ChatText.objects.all()]
+        # # return_values = []
+        # queryset = get_if_exists(ChatText, kwargs=kwargs)
+        # # row_obj =  json.loads(row_obj[0]['json_chat'])
+        # for key, value in row_obj.items():
+        #     print(key)
+        #     new_obj = {'name': key, 'size': value}
+        #     return_values.append(new_obj)
+
+        # return Response(json.dumps(return_values))
 
 
     def post(self, *args, **kwargs):
         """
         """
 
+        def get_if_exists(model, **kwargs):
+            obj = model.objects.filter(room_id=kwargs['kwargs']['room_id'])
+            return obj
 
-        queryset = ChatText.objects.first()
-        import pdb; pdb.set_trace()
-        sanitized_data = self.sanitize(self.request.data['vals'], json.loads(queryset.json_chat))
-        queryset.json_chat = json.dumps(sanitized_data)
+        # for item in data:
+        #     for k, v in item.items():
+        #         chat = ChatText()
+        #         chat.room_id = room_id
+        #         chat.content = k
+        #         chat.count = v
+        #         chat.save()
+        raw_data = {}
+        for key in dict(self.request.data).keys():
+            raw_data = json.loads(key)
+        kwargs['room_id'] = raw_data['room_id']
+        queryset = get_if_exists(ChatText, kwargs=kwargs)
+        if not queryset:
+            chat = ChatText()
+            chat.room_id = kwargs['room_id']
+            chat.json_chat = json.dumps(self.sanitize(raw_data['content'], {}))
+            chat.save()
+            return Response()
+        else:
+            sanitized_data = self.sanitize(raw_data['content'], json.loads(queryset[0].json_chat))
+            queryset[0].json_chat = json.dumps(sanitized_data)
 
-        queryset.save()
+            queryset[0].save()
         return Response(sanitized_data)
 
     # # def post(self, request):
@@ -157,7 +219,6 @@ class MessagePostApiView(generics.CreateAPIView):
         """
 
         ignore_words = ['ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than']
-
 
         for message in raw_chat:
             for word in message.split(' '):
