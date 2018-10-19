@@ -93,8 +93,8 @@ class MessageGetApiView(generics.CreateAPIView):
         queryset = get_if_exists(ChatText, kwargs=kwargs)
 
         if not queryset:
+            queryset = [{'room_id': None, 'content':[{'placeholder': None}]}]
             import pdb; pdb.set_trace()
-            raise KeyError
 
         row_obj = json.loads(queryset[0].json_chat).items()
         for key, value in row_obj:
@@ -103,11 +103,13 @@ class MessageGetApiView(generics.CreateAPIView):
             new_obj = {'name': key, 'size': value}
             return_values.append(new_obj)
 
-        # import pdb; pdb.set_trace()
         return_values = sorted(return_values, key=lambda x: (x['size']))
+        count = 0
+        for i in range(len(return_values)):
+            count += i
 
-
-        return Response(json.dumps(return_values[-8:]))
+        # import pdb; pdb.set_trace()
+        return Response(json.dumps(return_values[(-count - 1):]))
 
 
 
@@ -154,8 +156,12 @@ class MessagePostApiView(generics.CreateAPIView):
         #         chat.count = v
         #         chat.save()
         raw_data = {}
+        # import pdb; pdb.set_trace()
         for key in dict(self.request.data).keys():
-            raw_data = json.loads(key)
+            try:
+                raw_data = json.loads(key)
+            except:
+                import pdb; pdb.set_trace()
         kwargs['room_id'] = raw_data['room_id']
         queryset = get_if_exists(ChatText, kwargs=kwargs)
         if not queryset:
