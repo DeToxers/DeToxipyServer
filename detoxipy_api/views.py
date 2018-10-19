@@ -2,7 +2,7 @@ from rest_framework import generics
 import json
 from .serializers import ChatTextSerializer
 from .models import ChatText
-from django_rest_framework import JsonResponse
+from django.http import JsonResponse
 
 from rest_framework.response import Response
 
@@ -35,7 +35,7 @@ class MessagePostApiView(generics.CreateAPIView):
                 HTTP Response code. Returns 404(actually a 500). If it successful returns status code 201
         """
         # get the chat data in a form we can use
-        data = json.loads(kwargs['vals'])
+        data = json.loads(kwargs['values'])
         room_id = kwargs['room_id']
 
         # put those in the db
