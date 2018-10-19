@@ -2,10 +2,6 @@
 The server-side of a Twitch extension that allows users to visualize trending keywords in a Twitch chat using bubbles that grow and shrink depending on popularity.
 ___
 
-**AWS** []()
-
-**AWS** []()
-
 **GitHub(Client)**
 
 [https://github.com/DeToxers/DeToxipyClient](https://github.com/DeToxers/DeToxipyClient)
@@ -33,10 +29,8 @@ ___
 - Python3
 - Javascript ES6
 - Django 2.1.1
-- Twitch Dev Rig
-- Twitch Chat Bot
+- Twitch Messaging Interface
 - D3
-- Kubernetes
 
 ___
 <a id="overview"></a>
@@ -46,7 +40,7 @@ ___
 ___
 ## Getting started
 <a id="start"></a>
-- Clone the repository and ensure you have Docker and Docker Compose installed. Run "docker-compose up --build" from your command line and then go to localhost in your browser.
+- Clone all the repositories. Start the chatbot server, the django server, and the D3 server.
 ___
 
 ## Routes
@@ -57,7 +51,7 @@ ___
 
 - **Usage:**
 
-    Gets data for the data visualization for the current session.
+    Gets json chat data out of database.
 
 - **Output:**
 ```
@@ -68,23 +62,19 @@ Code Block
 
 - **Usage:**
 
-    Post route for list view and detail view of the messages.
+    Post route for sending JSON of chat to our database.
 
 - **Output:**
-```
+`
 Code Block
 ```
 ___
 ## Models
 <a id="models"></a>
 
-- **Session**
+- **ChatText**
 
-    Holds the data for the current stream session. This table's contents are deleted at the end of each session. It is used to calculate the most common words per time period/
-
-- **Main**
-
-    Holds the historical data for the streamer. At the end of each session, the top 5 words for that session are added to this table. This table is used for data visualization of chat trends over time.
+    Holds the data for the current stream session. Stores it in the database in JSON.
 
 ___
 <a id="contrib"></a>
@@ -104,3 +94,10 @@ ___
 - Twitch Documentation
 - D3 Documentation
 ___
+<a id="Special Thanks"></a>
+- Michael Sklepowich
+- JJ Feore
+- Shannon Tully
+- Brian Nations
+- James Salamonsen
+- Benjamin Hurst
