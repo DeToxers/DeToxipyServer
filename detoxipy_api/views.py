@@ -93,16 +93,21 @@ class MessageGetApiView(generics.CreateAPIView):
         queryset = get_if_exists(ChatText, kwargs=kwargs)
 
         if not queryset:
+            import pdb; pdb.set_trace()
             raise KeyError
 
         row_obj = json.loads(queryset[0].json_chat).items()
         for key, value in row_obj:
-            print(key)
+
+
             new_obj = {'name': key, 'size': value}
             return_values.append(new_obj)
 
+        # import pdb; pdb.set_trace()
+        return_values = sorted(return_values, key=lambda x: (x['size']))
 
-        return Response(json.dumps(return_values))
+
+        return Response(json.dumps(return_values[-8:]))
 
 
 
