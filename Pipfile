@@ -18,6 +18,8 @@ django-rq = "*"
 "psycopg2-binary" = "*"
 django-rest-framework = "*"
 django-cors-headers = "*"
+coverage = "*"
+pytest-cov = "*"
 
 [dev-packages]
 pylint = "*"

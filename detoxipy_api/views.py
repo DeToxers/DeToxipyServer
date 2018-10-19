@@ -1,30 +1,16 @@
-# from rest_framework.authentication import TokenAuthentication
-# from rest_framework.permissions import IsAuthenticated
-from collections import Counter
 from rest_framework import generics
 import json
 
 from .models import ChatText
-from datetime import datetime
-from .serializers import MessageSerializer, ChatBotSerializer
-from django.http import Http404, HttpResponse
+from .serializers import ChatBotSerializer
 
-# from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from rest_framework.request import clone_request
-from rest_framework import status
 
 
 class GetBubbleApiView(generics.ListAPIView):
     """ Custom class for listing all of the messages
     """
-    # template_name = 'message_list.html'
-    # model = Session
-    context_object_name = 'bubble'
-    serializer_class = MessageSerializer
-    # queryset = Session.objects.all()
+    context_object_name = 'bubble',
     pk_url_kwarg = 'id'
 
     def get_queryset(self, *args, **kwargs):
