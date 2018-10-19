@@ -75,7 +75,7 @@ ___
 - **ChatText**
 
     Holds the data for the current stream session. Stores it in the database in JSON.
-
+```
 ___
 <a id="contrib"></a>
 ## Contributing to our project
@@ -95,6 +95,7 @@ ___
 - D3 Documentation
 ___
 <a id="Special Thanks"></a>
+## Special Thanks
 - Michael Sklepowich
 - JJ Feore
 - Shannon Tully
