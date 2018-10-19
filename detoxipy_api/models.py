@@ -17,6 +17,18 @@ class Session(models.Model):
         return f'{self.message} : {self.weight}'
 
 
+class ChatText(models.Model):
+    """
+    """
+    room_id = models.IntegerField()
+    json_chat = models.TextField()
+
+    # def __repr__(self):
+    #     return f'<Room: {self.room_id} | JSON_Chat: {self.json_chat} >'
+
+    def __str__(self):
+        return f'{self.room_id} : {self.json_chat}'
+
 
 # class SessionCache(models.Model):
 
