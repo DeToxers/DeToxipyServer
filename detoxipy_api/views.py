@@ -93,8 +93,8 @@ class MessageGetApiView(generics.CreateAPIView):
         queryset = get_if_exists(ChatText, kwargs=kwargs)
 
         if not queryset:
-            queryset = [{'room_id': None, 'content':[{'placeholder': None}]}]
-            import pdb; pdb.set_trace()
+            queryset = [{"room_id": 0, "json_chat": {"thing":0}}]
+
 
         row_obj = json.loads(queryset[0].json_chat).items()
         for key, value in row_obj:
